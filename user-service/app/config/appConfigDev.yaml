@@ -1,0 +1,5 @@
+sqlConfig: &sqlConfig
+  code: sqldb
+  driverName: mysql
+  urlAddress: "[username]:[password]@tcp([host]:[port])/[dbname]?charset=utf8"
+  dbName:

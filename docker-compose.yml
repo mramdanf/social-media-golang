@@ -26,3 +26,6 @@ services:
     deploy:
       mode: "replicated"
       replicas: 1
+    environment:
+      ENV: ${ENV}
+      USER_SERVICE_PORT: ${USER_SERVICE_PORT}
