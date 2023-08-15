@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  user-service-mysql:
+    container_name: user-service-mysql
+    image: mysql:8.0
+    ports:
+      - "${USER_SERVICE_MYSQL_PORT}:${USER_SERVICE_MYSQL_PORT}"
+    volumes:
+      - ./user-service/db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${USER_SERVICE_MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${USER_SERVICE_MYSQL_DB_NAME}
+    healthcheck:
+      test: "/usr/bin/mysql --user=${USER_SERVICE_MYSQL_USERNAME} --password=${USER_SERVICE_MYSQL_PASSWORD} --execute \"SHOW DATABASES;\""
+      interval: 2s
+      timeout: 20s
+      retries: 10
+  
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: ./user-service.Dockerfile
+    ports:
+      - "${USER_SERVICE_PORT}:${USER_SERVICE_PORT}"
+    deploy:
+      mode: "replicated"
+      replicas: 1
