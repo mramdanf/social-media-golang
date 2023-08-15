@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"os"
 
+	logConfig "github.com/jfeng45/glogger/config"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 )
 
 type AppConfig struct {
 	SQLConfig DataStoreConfig `yaml:"sqlConfig"`
+	LogConfig logConfig.Logging `yaml:"logConfig"`
 }
 
 type DataStoreConfig struct {

@@ -12,7 +12,7 @@ type Config struct {}
 
 func main() {
 	configFileName := fmt.Sprintf("/app/config/appConfig%s.yaml", os.Getenv("ENV"))
-	app.InitApp(configFileName)
+	buildContainer(configFileName)
 
 	web := Config{}
 
@@ -30,3 +30,7 @@ func main() {
 	}
 	
 }
+
+func buildContainer(filename string) {
+	app.InitApp(filename)
+} 
