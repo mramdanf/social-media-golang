@@ -14,5 +14,5 @@ up_build: build_user
 
 build_user:
 	@echo "Building user binary..."
-	cd user-service && env GOOS=linux CGO_ENABLED=0 go build -o ${USER_BINARY} ./cmd
+	cd user-service && env GOOS=linux CGO_ENABLED=0 go build -o ${USER_BINARY} ./cmd/restserver
 	@echo "Done!"

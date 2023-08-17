@@ -3,8 +3,15 @@ sqlConfig: &sqlConfig
   driverName: mysql
   urlAddress: "[username]:[password]@tcp([host]:[port])/[dbname]?charset=utf8"
   dbName:
+  tx: false
 zapConfig: &zapConfig
   code: zap
   level: debug
   enableCaller: true
 logConfig: *zapConfig
+useCaseConfig:
+  registration:
+    code: registration
+    userDataConfig: &userDataConfig
+      code: userData
+      dataStoreConfig: *sqlConfig

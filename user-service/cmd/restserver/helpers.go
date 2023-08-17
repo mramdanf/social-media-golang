@@ -5,15 +5,17 @@ import (
 	"errors"
 	"io"
 	"net/http"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type jsonResponse struct {
 	Error   bool   `json:"error"`
 	Message string `json:"message"`
-	Data    any    `json:"Data,omitempty"`
+	Data    any    `json:"data,omitempty"`
 }
 
-func (app *Config) readJSON(w http.ResponseWriter, r *http.Request, data any) error {
+func (us *UserService) readJSON(w http.ResponseWriter, r *http.Request, data any) error {
 	maxBytes := 1048576 // 1MB
 
 	r.Body = http.MaxBytesReader(w, r.Body, int64(maxBytes))
@@ -33,7 +35,7 @@ func (app *Config) readJSON(w http.ResponseWriter, r *http.Request, data any) er
 
 }
 
-func (app *Config) writeJSON(w http.ResponseWriter, status int, data any, headers ...http.Header) error {
+func (us *UserService) writeJSON(w http.ResponseWriter, status int, data any, headers ...http.Header) error {
 	out, err := json.Marshal(data)
 	if err != nil {
 		return err
@@ -55,7 +57,7 @@ func (app *Config) writeJSON(w http.ResponseWriter, status int, data any, header
 	return nil
 }
 
-func (app *Config) errorJSON(w http.ResponseWriter, err error, status ...int) error {
+func (us *UserService) errorJSON(w http.ResponseWriter, err error, status ...int) error {
 	statusCode := http.StatusBadRequest
 
 	if len(status) > 0 {
@@ -66,5 +68,15 @@ func (app *Config) errorJSON(w http.ResponseWriter, err error, status ...int) er
 	payload.Error = true
 	payload.Message = err.Error()
 
-	return app.writeJSON(w, statusCode, payload)
+	return us.writeJSON(w, statusCode, payload)
+}
+
+func (us *UserService) hashPassword(password string) (string, error) {
+    bytes, err := bcrypt.GenerateFromPassword([]byte(password), 4)
+    return string(bytes), err
+}
+
+func (us *UserService) checkPasswordHash(password, hash string) bool {
+    err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+    return err == nil
 }

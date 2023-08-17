@@ -1,8 +1,8 @@
 version: '3'
 
 services:
-  user-service-mysql:
-    container_name: user-service-mysql
+  user_service_mysql:
+    container_name: user_service_mysql
     image: mysql:8.0
     ports:
       - "${USER_SERVICE_MYSQL_PORT}:${USER_SERVICE_MYSQL_PORT}"
@@ -29,3 +29,12 @@ services:
     environment:
       ENV: ${ENV}
       USER_SERVICE_PORT: ${USER_SERVICE_PORT}
+      WAIT_HOSTS: ${USER_SERVICE_MYSQL_HOST}:${USER_SERVICE_MYSQL_PORT}
+      USER_SERVICE_MYSQL_USERNAME: ${USER_SERVICE_MYSQL_USERNAME}
+      USER_SERVICE_MYSQL_PASSWORD: ${USER_SERVICE_MYSQL_PASSWORD}
+      USER_SERVICE_MYSQL_DB_NAME: ${USER_SERVICE_MYSQL_DB_NAME}
+      USER_SERVICE_MYSQL_PORT: ${USER_SERVICE_MYSQL_PORT}
+      USER_SERVICE_MYSQL_HOST: ${USER_SERVICE_MYSQL_HOST}
+    depends_on:
+      user_service_mysql:
+        condition: service_healthy

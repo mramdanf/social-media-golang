@@ -1,8 +1,9 @@
 package app
 
 import (
-	"fmt"
 	"user-service/app/config"
+	"user-service/app/container"
+	"user-service/app/container/servicecontainer"
 	"user-service/app/logger"
 
 	logConfig "github.com/jfeng45/glogger/config"
@@ -10,12 +11,16 @@ import (
 	"github.com/pkg/errors"
 )
 
-func InitApp(filename ...string) {
+func InitApp(filename ...string) (container.ContainerInterface, error) {
 	config, err := config.BuildConfig(filename...)
 	if err != nil {
-		fmt.Println(err)
+		return nil, errors.Wrap(err, "BuildConfig")
 	}
 	err = initLogger(&config.LogConfig)
+	if err != nil {
+		return nil, err
+	}
+	return initContainer(config)
 }
 
 func initLogger(lc *logConfig.Logging) error {
@@ -25,4 +30,10 @@ func initLogger(lc *logConfig.Logging) error {
 	}
 	logger.SetLogger(log)
 	return nil
+}
+
+func initContainer(config *config.AppConfig) (container.ContainerInterface, error) {
+	factoryMap := make(map[string]interface{})
+	c := servicecontainer.ServiceContainer{FactoryMap: factoryMap, AppConfig: config}
+	return &c, nil
 }
