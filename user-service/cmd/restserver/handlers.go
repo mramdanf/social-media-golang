@@ -50,6 +50,7 @@ func (us *UserService) signUp(w http.ResponseWriter, r *http.Request) {
 	createdUser, err := rcui.SignUp(&user)
 	if err != nil {
 		logger.Log.Errorf("%+v\n", err)
+		us.errorJSON(w, err, http.StatusInternalServerError)
 		return
 	}
 

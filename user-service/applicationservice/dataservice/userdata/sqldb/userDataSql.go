@@ -47,7 +47,7 @@ func (uds *UserDataSql) FindByEmail(email string) (*model.User, error) {
 	}
 	defer rows.Close()
 	if rows.Next() {
-
+		return rowsToUser(rows)
 	}
 	return nil, nil
 }
