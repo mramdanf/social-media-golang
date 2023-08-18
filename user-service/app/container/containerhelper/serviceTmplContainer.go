@@ -16,3 +16,12 @@ func GetRegistrationUseCase(c container.ContainerInterface) (usecase.Registratio
 	}
 	return value.(usecase.RegistrationUseCaseInterface), nil
 }
+
+func GetCredentialUseCase(c container.ContainerInterface) (usecase.CredentialUseCaseInterface, error) {
+	key := config.CREDENTIAL
+	value, err := c.BuildUseCase(key)
+	if err != nil {
+		return nil, errors.Wrap(err, "")
+	}
+	return value.(usecase.CredentialUseCaseInterface), nil
+}

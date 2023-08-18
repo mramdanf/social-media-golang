@@ -13,6 +13,7 @@ type UseCaseFbInterface interface {
 
 var useCaseFactoryBuilderMap = map[string]UseCaseFbInterface {
 	config.REGISTRATION: &RegistrationFactory{},
+	config.CREDENTIAL: &CredentialFactory{},
 }
 
 func GetUseCaseFb(key string) UseCaseFbInterface {

@@ -17,6 +17,7 @@ const (
 // use case code. Need to map to the use case code (UseCaseConfig) in the configuration yaml file.
 const (
 	REGISTRATION string = "registration"
+	CREDENTIAL string = "credential"
 )
 
 // data service code. Need to map to the data service code (DataConfig) in the configuration yaml file.
@@ -68,6 +69,10 @@ func validateUseCase(useCaseConfig UseCaseConfig) error {
 	if err != nil {
 		return errors.Wrap(err, "")
 	}
+	err = validateCredential(useCaseConfig)
+	if err != nil {
+		return errors.Wrap(err, "")
+	}
 	return nil
 }
 
@@ -77,6 +82,22 @@ func validateRegistration(useCaseConfig UseCaseConfig) error {
 	rcMsg := " in validateRegistration doens't match key = "
 	if REGISTRATION != key {
 		errMsg := REGISTRATION + rcMsg + key
+		return errors.New(errMsg)
+	}
+	key = rc.UserDataConfig.Code
+	if USER_DATA != key {
+		errMsg := USER_DATA + rcMsg + key
+		return errors.New(errMsg)
+	}
+	return nil
+}
+
+func validateCredential(useCaseConfig UseCaseConfig) error {
+	rc := useCaseConfig.Credential
+	key := rc.Code
+	rcMsg := " in validateCredential doens't match key = "
+	if CREDENTIAL != key {
+		errMsg := CREDENTIAL + rcMsg + key
 		return errors.New(errMsg)
 	}
 	key = rc.UserDataConfig.Code

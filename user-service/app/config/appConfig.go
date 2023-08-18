@@ -35,10 +35,17 @@ type DataStoreConfig struct {
 // UseCaseConfig represents different use cases
 type UseCaseConfig struct {
 	Registration RegistrationConfig `yaml:"registration"`
+	Credential CredentialConfigConfig `yaml:"credential"`
 }
 
 // RegistrationConfig represents registration use case
 type RegistrationConfig struct {
+	Code string `yaml:"code"`
+	UserDataConfig DataConfig `yaml:"userDataConfig"`
+}
+
+// CredentialConfig represents credential use case
+type CredentialConfigConfig struct {
 	Code string `yaml:"code"`
 	UserDataConfig DataConfig `yaml:"userDataConfig"`
 }

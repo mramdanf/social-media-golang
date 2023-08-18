@@ -15,3 +15,6 @@ useCaseConfig:
     userDataConfig: &userDataConfig
       code: userData
       dataStoreConfig: *sqlConfig
+  credential:
+    code: credential
+    userDataConfig: *userDataConfig

@@ -44,9 +44,9 @@ func main() {
 
 func buildContainer(filename string) (*servicecontainer.ServiceContainer, error) {
 	container, err := app.InitApp(filename)
-	sc := container.(*servicecontainer.ServiceContainer)
 	if err != nil {
 		return nil, errors.Wrap(err, "")
 	}
+	sc := container.(*servicecontainer.ServiceContainer)
 	return sc, nil
 } 

@@ -23,7 +23,8 @@ func (us *UserService) routes() http.Handler {
 
 	mux.Use(middleware.Heartbeat("/ping"))
 
-	mux.Get("/sign-up", us.signUp)
+	mux.Post("/sign-up", us.signUp)
+	mux.Post("/login", us.login)
 
 	return mux
 }

@@ -61,3 +61,37 @@ func (us *UserService) signUp(w http.ResponseWriter, r *http.Request) {
 
 	us.writeJSON(w, http.StatusAccepted, responsePayload)
 }
+
+func (us *UserService) login(w http.ResponseWriter, r *http.Request) {
+	var requestPayload struct {
+		Email string `json:"email"`
+		Password string `json:"password"`
+	}
+	err := us.readJSON(w, r, &requestPayload)
+	if err != nil {
+		us.errorJSON(w, err, http.StatusBadRequest)
+		return
+	}
+
+	credentialUseCase, err := containerhelper.GetCredentialUseCase(us.container)
+	if err != nil {
+		logger.Log.Errorf("%+v\n", err)
+		us.errorJSON(w, err, http.StatusInternalServerError)
+		return
+	}
+
+	user, err := credentialUseCase.Login(requestPayload.Email, requestPayload.Password)
+	if err != nil {
+		logger.Log.Errorf("%+v\n", err)
+		us.errorJSON(w, err, http.StatusInternalServerError)
+		return
+	}
+
+	responsePayload := jsonResponse {
+		Error: false,
+		Data: user,
+	}
+
+	us.writeJSON(w, http.StatusOK, responsePayload)
+
+}
