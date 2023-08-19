@@ -5,6 +5,7 @@ import (
 	"time"
 	"user-service/app/container/containerhelper"
 	"user-service/app/logger"
+	"user-service/app/utils"
 	"user-service/domain/model"
 )
 
@@ -22,9 +23,9 @@ func (us *UserService) signUp(w http.ResponseWriter, r *http.Request) {
 		Password string `json:"password"`
 	}
 
-	err := us.readJSON(w, r, &requestPayload)
+	err := utils.ReadJSON(w, r, &requestPayload)
 	if err != nil {
-		us.errorJSON(w, err, http.StatusBadRequest)
+		utils.ErrorJSON(w, err, http.StatusBadRequest)
 		return
 	}
 
@@ -34,7 +35,7 @@ func (us *UserService) signUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	hashedPassword, err := us.hashPassword(requestPayload.Password)
+	hashedPassword, err := utils.HashPassword(requestPayload.Password)
 	if err != nil {
 		logger.Log.Errorf("%+v\n", err)
 		return
@@ -50,16 +51,16 @@ func (us *UserService) signUp(w http.ResponseWriter, r *http.Request) {
 	createdUser, err := rcui.SignUp(&user)
 	if err != nil {
 		logger.Log.Errorf("%+v\n", err)
-		us.errorJSON(w, err, http.StatusInternalServerError)
+		utils.ErrorJSON(w, err, http.StatusInternalServerError)
 		return
 	}
 
-	responsePayload := jsonResponse {
+	responsePayload := utils.JsonResponse {
 		Error: false,
 		Data: *createdUser,
 	}
 
-	us.writeJSON(w, http.StatusAccepted, responsePayload)
+	utils.WriteJSON(w, http.StatusAccepted, responsePayload)
 }
 
 func (us *UserService) login(w http.ResponseWriter, r *http.Request) {
@@ -67,31 +68,31 @@ func (us *UserService) login(w http.ResponseWriter, r *http.Request) {
 		Email string `json:"email"`
 		Password string `json:"password"`
 	}
-	err := us.readJSON(w, r, &requestPayload)
+	err := utils.ReadJSON(w, r, &requestPayload)
 	if err != nil {
-		us.errorJSON(w, err, http.StatusBadRequest)
+		utils.ErrorJSON(w, err, http.StatusBadRequest)
 		return
 	}
 
 	credentialUseCase, err := containerhelper.GetCredentialUseCase(us.container)
 	if err != nil {
 		logger.Log.Errorf("%+v\n", err)
-		us.errorJSON(w, err, http.StatusInternalServerError)
+		utils.ErrorJSON(w, err, http.StatusInternalServerError)
 		return
 	}
 
 	user, err := credentialUseCase.Login(requestPayload.Email, requestPayload.Password)
 	if err != nil {
 		logger.Log.Errorf("%+v\n", err)
-		us.errorJSON(w, err, http.StatusInternalServerError)
+		utils.ErrorJSON(w, err, http.StatusInternalServerError)
 		return
 	}
 
-	responsePayload := jsonResponse {
+	responsePayload := utils.JsonResponse {
 		Error: false,
 		Data: user,
 	}
 
-	us.writeJSON(w, http.StatusOK, responsePayload)
+	utils.WriteJSON(w, http.StatusOK, responsePayload)
 
 }

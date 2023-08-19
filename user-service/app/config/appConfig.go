@@ -76,6 +76,7 @@ func buildConfigFromFile(filename string) (*AppConfig, error) {
 	mysqlPort := os.Getenv("USER_SERVICE_MYSQL_PORT")
 	mysqlHost := os.Getenv("USER_SERVICE_MYSQL_HOST")
 	ac.UseCaseConfig.Registration.UserDataConfig.DataStoreConfig.UrlAddress = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8", mysqlUserName, mysqlPassword, mysqlHost, mysqlPort, mysqlDbName)
+	ac.UseCaseConfig.Credential.UserDataConfig.DataStoreConfig.UrlAddress = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8", mysqlUserName, mysqlPassword, mysqlHost, mysqlPort, mysqlDbName)
 
 	fmt.Println("appConfig:", ac)
 	return &ac, nil
